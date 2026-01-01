@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/CalitoTech/prueba_react/issues"
   },
-  "homepage": "https://github.com/CalitoTech/prueba_react#readme"
+  "homepage": "https://github.com/CalitoTech/prueba_react#readme",
+  "devDependencies": {
+    "standard": "^17.1.2"
+  }
 }
