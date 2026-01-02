@@ -1,38 +1,23 @@
-import { useState, useEffect } from 'react'
 import './App.css'
+import { useCatImage } from './hooks/useCatImage.js'
+import { useCatFact } from './hooks/useCatFact.js'
+import { Otro } from './Components/Otro.jsx'
 
-const API_URL = 'https://catfact.ninja/fact'
-// const IMAGE_URL = `https://cataas.com/cat/says/${firstWord}?json=true`
 export function App() {
-    const [fact, setFact] = useState('Lorem ipsum')
-    const [imageUrl, setImageUrl] = useState('')
-
-    useEffect (() => {
-        fetch(API_URL)
-        .then(res => res.json())
-        .then(data => {
-            const { fact } = data
-            setFact(fact)
-        })
-    }, [])
-
-    useEffect(() => {
-        if (!fact) return
-        const firstWord = fact.split(' ')[0]
-            fetch(`https://cataas.com/cat/says/${firstWord}?json=true`)
-            .then(res => res.json())
-            .then(response => {
-                const { url } = response
-                setImageUrl(url)
-            })
-    }, [fact])
+    const { fact, refreshFact } = useCatFact()
+    const { imageUrl } = useCatImage({ fact })
     
+    const handleClick = () => {
+        refreshFact()
+    }
 
     return (
         <main>
             <h1>App de gatitos</h1>
             <p>{fact}</p>
             {imageUrl && <img src={`${imageUrl}`} alt="Imagen de un gato" />}
+            {/* <Otro /> */}
+            <button onClick={handleClick}>Nuevo dato</button>
         </main>
     )
 }

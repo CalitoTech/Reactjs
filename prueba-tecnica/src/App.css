@@ -6,6 +6,11 @@ main {
     max-width: 800px;
 }
 
+main img {
+    max-width: 800px;
+    max-height: 400px;
+}
+
 section {
     display: flex;
     justify-content: space-between;
