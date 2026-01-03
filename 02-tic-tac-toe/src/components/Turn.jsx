@@ -1,5 +1,5 @@
-import { Square } from "./Square.jsx"
-import { TURNS } from "../constants.js"
+import { Square } from './Square.jsx'
+import { TURNS } from '../constants.js'
 
 export function Turn ({ turn }) {
     return (

@@ -26,7 +26,6 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
       'quotes': ['error', 'single'],           // Fuerza comillas simples
       'semi': ['error', 'never'],             // Prohíbe puntos y coma
-      'indent': ['error', 2],                 // Fuerza sangría de 2 espacios
       'object-curly-spacing': ['error', 'always'] // Fuerza espacio en objetos { hola }
     },
   },

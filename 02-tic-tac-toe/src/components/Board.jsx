@@ -1,4 +1,4 @@
-import { Square } from "./Square.jsx"
+import { Square } from './Square.jsx'
 
 export function Board ({ board, updateBoard }) {
 
