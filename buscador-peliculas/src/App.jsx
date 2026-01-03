@@ -1,33 +1,31 @@
 import './App.css'
 import { useMovies } from './hooks/useMovies'
 import { Movies } from './components/Movies'
-import { useState, useEffect, useRef} from 'react'
+import { useState } from 'react'
 
 function useSearch() {
   const [search, updateSearch] = useState('')
   const [error, setError] = useState(null)
-  const isFirstInput = useRef(true)
 
-   useEffect(() => {
-      if (isFirstInput.current) {
-        isFirstInput.current = search === ''
-        return
-      }
+  const updateSearchWithValidation = (value) => {
+    // 1. Actualizamos el valor
+    updateSearch(value)
 
-      if (search === '') {
-        setError("No se puede buscar una película vacía")
-        return
-      }
-
-      if (search.length < 2) {
-        setError("La búsqueda debe tener al menos 2 caracteres")
-        return
-      }
-
+    // 2. Validamos inmediatamente
+    if (value === '') {
       setError(null)
-    }, [search])
+      return
+    }
 
-    return {search, updateSearch, error}
+    if (value.length < 2) {
+      setError("La búsqueda debe tener al menos 2 caracteres")
+      return
+    }
+
+    setError(null)
+  }
+
+    return {search, updateSearch: updateSearchWithValidation, error}
 }
 
 function App() {
