@@ -19,5 +19,8 @@
   "homepage": "https://github.com/CalitoTech/prueba_react#readme",
   "devDependencies": {
     "standard": "^17.1.2"
+  },
+  "dependencies": {
+    "just-debounce-it": "3.2.0"
   }
 }
