@@ -18,7 +18,12 @@
   },
   "homepage": "https://github.com/CalitoTech/prueba_react#readme",
   "devDependencies": {
-    "standard": "^17.1.2"
+    "@eslint/js": "^9.39.2",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "globals": "^17.0.0",
+    "standard": "^17.1.2",
+    "typescript-eslint": "^8.52.0"
   },
   "dependencies": {
     "just-debounce-it": "3.2.0"
