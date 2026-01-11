@@ -2,6 +2,7 @@ import Form from 'react-bootstrap/Form';
 import { AUTO_LANGUAGE, SUPPORTED_LANGUAGES } from '../constants';
 import type { FC } from 'react';
 import { type FromLaguage, type Language, SectionType } from '../types.d';
+import { BlueArrow } from './Icons';
 
 // interface Props {
 //     onChange: (language: Language) => void;
@@ -19,7 +20,11 @@ export const LanguageSelector: FC<Props> = ({ onChange, type, value }) => {
     }
 
     return (
-        <Form.Select aria-label="Selecciona el idioma" onChange={handleChange} value={value}>
+        <Form.Select style={{ 
+            color: 'blue', 
+            backgroundImage: BlueArrow, // Tu constante con el string del SVG
+            backgroundSize: '25px',      // <--- Aumenta este valor para hacerla más grande
+        }} aria-label="Selecciona el idioma" onChange={handleChange} value={value}>
             {type === SectionType.From && <option value={AUTO_LANGUAGE}>Detectar idioma</option>}
             {Object.entries(SUPPORTED_LANGUAGES).map(([key, literal]) => (
                 <option key={key} value={key}>{literal}</option>
