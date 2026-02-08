@@ -1,15 +1,25 @@
 import './App.css'
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useMemo, useState } from "react"
 import { UsersList } from './components/UsersList'
 import { SortBy, type User } from './types.d'
+import { useUsers } from './hook/useUsers'
+import { Results } from './components/Results'
+import { useQueryClient } from '@tanstack/react-query'
+import { type InfiniteData } from '@tanstack/react-query'
+
+interface UsersPage {
+  nextCursor: number | undefined
+  users: User[]
+}
 
 function App() {
-  const [users, setUsers] = useState<User[]>([])
+  const useUser = useUsers()
+  const { isLoading, isError, users, refetch, fetchNextPage, hasNextPage } = useUser
   const [showColors, setShowColors] = useState(false)
   const [sorting, setSorting] = useState<SortBy>(SortBy.NONE)
   const [filterCountry, setFilterCountry] = useState<string | null>(null)
 
-  const originalUsers = useRef<User[]>([])
+  // const originalUsers = useRef<User[]>([])
 
   const toggleColors = () => {
     setShowColors(!showColors)
@@ -20,27 +30,30 @@ function App() {
     setSorting(newSortingValue)
   }
 
+  const queryClient = useQueryClient()
+
   const handleDelete = (email: string) => {
-    const filteredUsers = users.filter((user) => user.email !== email)
-    setUsers(filteredUsers)
+  // InfiniteData es el tipo genérico de TanStack Query para datos paginados
+    queryClient.setQueryData<InfiniteData<UsersPage>>(['users'], (oldData) => {
+      if (oldData == null) return undefined
+
+      return {
+        ...oldData,
+        pages: oldData.pages.map((page) => ({
+          ...page,
+          users: page.users.filter((user) => user.email !== email)
+        }))
+      }
+    })
   }
 
-  const handleReset = () => {
-    setUsers(originalUsers.current)
+  const handleReset = async () => {
+    await refetch()
   }
 
   const handleChangeSort = (sort: SortBy) => {
     setSorting(sort)
   }
-
-  useEffect(() => {
-      fetch('https://randomuser.me/api/?results=100')
-      .then((response) => response.json())
-      .then((data) => {
-        setUsers(data.results)
-        originalUsers.current = data.results
-      })
-  }, [])
 
   const filteredUsers = useMemo(() => {
   return filterCountry
@@ -68,6 +81,7 @@ function App() {
     <>
       <div>
         <h1>Prueba tecnica</h1>
+        <Results />
         <header>
           <button onClick={toggleColors}>
             {showColors ? 'Ocultar colores' : 'Mostrar colores'}
@@ -83,8 +97,21 @@ function App() {
             onChange={(e) => setFilterCountry(e.target.value)}
           />
         </header>
-        <UsersList changeSorting={handleChangeSort} showColors={showColors} users={sortedUsers} deleteUser={handleDelete} />
-      </div>
+        {isLoading && <p>Cargando usuarios...</p>}
+        {isError && <p>Ha habido un error: {isError}</p>}
+        {users.length === 0 && !isLoading && !isError && <p>No hay usuarios disponibles.</p>}
+        { users.length > 0 &&
+          <UsersList changeSorting={handleChangeSort} showColors={showColors} users={sortedUsers} deleteUser={handleDelete} />
+        }
+        {!isLoading && !isError && users.length > 0 && hasNextPage &&
+        <button onClick={() => {fetchNextPage()}}>
+          Cargar más usuarios
+        </button>
+        }
+        {!isLoading && !isError && users.length > 0 && !hasNextPage &&
+          <p>No hay más usuarios para cargar.</p>
+        }
+        </div>
     </>
   )
 }
